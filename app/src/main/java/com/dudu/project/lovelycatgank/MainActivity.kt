@@ -1,66 +1,90 @@
 package com.dudu.project.lovelycatgank
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.View
-import android.widget.TextView
-import com.dudu.project.lovelycatgank.http.bean.GankInfo
-import com.dudu.project.lovelycatgank.http.bean.GankInfoList
-import com.dudu.project.lovelycatgank.http.bean.HttpClient
-import com.dudu.project.lovelycatgank.ui.adapter.GankInfoAdapter
-import com.google.gson.Gson
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
-import kotlin.properties.Delegates
+import android.support.design.widget.TabLayout
+import android.support.v4.app.Fragment
+import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
+import com.dudu.project.lovelycatgank.activitys.GankItemInfoFragment
+import com.dudu.project.lovelycatgank.http.bean.TitleData
+import com.dudu.project.lovelycatgank.ui.adapter.FragmentAdapter
+import com.dudu.project.lovelycatgank.ui.adapter.TransformAnim
 
 class MainActivity : AppCompatActivity() {
-
-    var array : Array<GankInfo> ?= null
-    var adapter : GankInfoAdapter by Delegates.notNull<GankInfoAdapter>()
+    var isOk = true
+    var mTabLayout: TabLayout? = null
+    var mViewPager: ViewPager? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-         adapter = GankInfoAdapter(this,array)
-        val rvGankList : RecyclerView = findViewById(R.id.rv_ganklist)
-        rvGankList.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-        rvGankList.adapter = adapter
-        adapter.setOnItemClickListener(object : GankInfoAdapter.OnItemClickListener {
-            override fun onclick(v: View, position: Int) {
-            }
-        })
-        val textview : TextView = findViewById(R.id.hello)
-        textview.setOnClickListener(View.OnClickListener { loaddata() })
-//        loaddata()
+        initViewpager()
 
     }
 
-   fun loaddata(){
-       val map = mapOf<String,String>()
-       val gson = Gson()
-       val handler:Handler
+    fun initViewpager(): Unit {
+        val titles = TitleData().getTitles()
+        mViewPager = findViewById(R.id.viewpager) as ViewPager
+        mTabLayout = findViewById(R.id.tabLayout) as TabLayout
+        for (i in titles.indices) {
+            mTabLayout!!.addTab(mTabLayout!!.newTab().setText(titles.get(i)))
+        }
+        val fragments = ArrayList<Fragment>()
+        for (i in titles.indices) {
+            val itemFragment = GankItemInfoFragment()
+            val bundle = Bundle()
+            val stringBuffer = StringBuffer()
+            for (j in 1..9) {
+                stringBuffer.append(titles[i]).append(" ")
+            }
+            bundle.putString("content", stringBuffer.toString())
+            itemFragment.arguments = bundle
+            fragments.add(itemFragment)
+        }
 
+        val mFragmentAdapter = FragmentAdapter(supportFragmentManager, fragments, titles)
+        mViewPager!!.adapter = mFragmentAdapter
+        mViewPager!!.adapter = mFragmentAdapter
+        mTabLayout!!.setupWithViewPager(mViewPager)
+        mTabLayout!!.setTabsFromPagerAdapter(mFragmentAdapter)
+        mViewPager!!.setPageTransformer(true, TransformAnim())
+        mTabLayout!!.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
 
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
 
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                /**
+                 * 控制变量
+                 */
+                if (isOk) {
+                    isOk = false
+                    val currentItemIndex = mViewPager!!.currentItem
 
-       doAsync {
-           val stringBuffer = HttpClient.httpGet("http://gank.io/api/random/data/Android/20",map,"1")
-           val newsResponse = gson.fromJson(stringBuffer,GankInfoList::class.java)
+                    if (Math.abs(currentItemIndex - tab!!.position) > 1) {
+                        /**
+                         * 向后点击
+                         */
+                        if (currentItemIndex <= tab!!.position) {
+                            mViewPager!!.setCurrentItem(tab.position - 1, false)
+                            mViewPager!!.setCurrentItem(tab.position, true)
+                        }
+                        /**
+                         * 向前点击
+                         */
+                        else {
+                            mViewPager!!.setCurrentItem(tab.position + 1, false)
+                            mViewPager!!.setCurrentItem(tab.position, true)
+                        }
+                    } else {
+                        mViewPager!!.setCurrentItem(tab.position, true)
+                    }
 
-           var datas = newsResponse
-           if (datas == null) {
-               uiThread {
-                   toast("数据为空")
-               }
-           } else {
-               uiThread {
-                   adapter.infos = datas.results
-               }
-           }
-       }
+                    isOk = true
+                }
+            }
+        })
 
     }
 }

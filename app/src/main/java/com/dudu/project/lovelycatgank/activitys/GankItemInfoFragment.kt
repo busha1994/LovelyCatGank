@@ -1,8 +1,7 @@
 package com.dudu.project.lovelycatgank.activitys
 
-import android.app.Fragment
 import android.os.Bundle
-import android.os.Handler
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -42,6 +41,8 @@ class GankItemInfoFragment : Fragment() {
         })
         val textview : TextView = view!!.findViewById(R.id.hello)
         textview.setOnClickListener(View.OnClickListener { loaddata() })
+        textview.visibility = View.GONE
+        loaddata()
     }
 
     fun loaddata(){
@@ -55,7 +56,7 @@ class GankItemInfoFragment : Fragment() {
             var datas = newsResponse
             if (datas == null) {
                 uiThread {
-                    toast("数据为空")
+//                    toast("数据为空")
                 }
             } else {
                 uiThread {
