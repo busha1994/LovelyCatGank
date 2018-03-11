@@ -33,7 +33,7 @@ class GankItemInfoFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = GankInfoAdapter(activity,array)
-        val rvGankList : RecyclerView = view!!.findViewById(R.id.swipeToLoad)
+        val rvGankList : RecyclerView = view!!.findViewById(R.id.rv_ganklist)
         rvGankList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL,false)
         rvGankList.adapter = adapter
         adapter.setOnItemClickListener(object : GankInfoAdapter.OnItemClickListener {
