@@ -15,12 +15,12 @@ import com.facebook.drawee.view.SimpleDraweeView
 /**
  * Created by admin on 2018/3/4.
  */
-class GankInfoAdapter (var context: Context, dates: Array<GankInfo> ?= null) : RecyclerView.Adapter<GankInfoAdapter.Holder>() {
+class GankInfoAdapter (var context: Context, dates: ArrayList<GankInfo> ?= null) : RecyclerView.Adapter<GankInfoAdapter.Holder>() {
 
     private var onItemClickListener : OnItemClickListener? = null
 
 
-    var infos: Array<GankInfo>? = null
+    var infos: ArrayList<GankInfo>? = null
         set(value) {
             field = value
             if (currSelect == null && value != null) {

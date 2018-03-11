@@ -3,6 +3,7 @@ package com.dudu.project.lovelycatgank.http.bean
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.io.UnsupportedEncodingException
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
@@ -15,14 +16,13 @@ import java.util.logging.Handler
 object HttpClient {
     private var handler : Handler ? = null
     private var result :String ? = null
+    private val getGankInfoUrl = "http://gank.io/api/random/data/?"
 
-    fun httpGet(strUrlPath:String ,params :Map<String,String>,encode:String) :String{
-        var strUrlPath  = strUrlPath
+    fun httpGet(infoType :String,curPage:Int) :String{
         var result :String ? = null
-//        val append_url = getRequestData(params,encode)
-//        strUrlPath = strUrlPath + "?"+append_url
+        val append_url = getRequestData(infoType,curPage).toString()
         try {
-            val url = URL(strUrlPath)
+            val url = URL(append_url)
             val urlConn = url.openConnection() as HttpURLConnection
             urlConn.connectTimeout = 5000
             urlConn.setRequestProperty("Content-Type","application/dudu-www-form-urlencoded")
@@ -46,16 +46,14 @@ object HttpClient {
 
     }
 
-    private fun getRequestData(params: Map<String,String>,encode:String) :StringBuffer {
+    private fun getRequestData(infoType :String,curPage:Int) :StringBuffer {
        val stringBuffer = StringBuffer()
         try {
-            for ((key,value) in params) {
-                stringBuffer.append(key)
-                        .append("=")
-                        .append(URLEncoder.encode(value,encode))
-                        .append("&")
-            }
-            stringBuffer.deleteCharAt(stringBuffer.length -1)
+                stringBuffer.append(getGankInfoUrl)
+                        .append(infoType)
+                        .append("/")
+                        .append("20/")
+                        .append(curPage)
         }catch (e: Exception){
             e.printStackTrace()
         }

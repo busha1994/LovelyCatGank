@@ -5,13 +5,14 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.io.Serializable
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by admin on 2018/3/4.
  */
 data class GankInfoList(
         var error : Boolean,
-        var results: Array<GankInfo>? = null) : Serializable, Parcelable {
+        var results: ArrayList<GankInfo>? = null) : Serializable, Parcelable {
 
     override fun describeContents(): Int {
         return 0
@@ -21,7 +22,7 @@ data class GankInfoList(
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         dest?.writeByte((if (error) 1 else 0).toByte())
-        dest?.writeArray(results)
+        dest?.writeList(results)
     }
 
     companion object {

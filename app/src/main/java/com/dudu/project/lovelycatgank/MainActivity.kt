@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.dudu.project.lovelycatgank.activitys.GankItemInfoFragment
+import com.dudu.project.lovelycatgank.http.bean.PageParams
 import com.dudu.project.lovelycatgank.http.bean.TitleData
 import com.dudu.project.lovelycatgank.ui.adapter.FragmentAdapter
 import com.dudu.project.lovelycatgank.ui.adapter.TransformAnim
@@ -34,9 +35,9 @@ class MainActivity : AppCompatActivity() {
             val bundle = Bundle()
             val stringBuffer = StringBuffer()
             for (j in 1..9) {
-                stringBuffer.append(titles[i]).append(" ")
+                stringBuffer.append(titles[i])
             }
-            bundle.putString("content", stringBuffer.toString())
+            bundle.putString("infoType", stringBuffer.toString())
             itemFragment.arguments = bundle
             fragments.add(itemFragment)
         }

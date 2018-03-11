@@ -8,15 +8,15 @@ class TitleData {
         val titles = ArrayList<String>()
 
         titles.clear()
-        titles.add("Android")
-        titles.add("IOS")
-        titles.add("前端")
-        titles.add("App")
-        titles.add("福利")
-        titles.add("瞎推荐")
-        titles.add("休息视频")
-        titles.add("拓展资源")
-        titles.add("全部")
+        titles.add(Const.GankInfoType.ANDROID)
+        titles.add(Const.GankInfoType.IOS)
+        titles.add(Const.GankInfoType.FRONT_END)
+        titles.add(Const.GankInfoType.APP)
+        titles.add(Const.GankInfoType.BENIFET)
+        titles.add(Const.GankInfoType.RECOMMAND)
+        titles.add(Const.GankInfoType.REST_VIDEO)
+        titles.add(Const.GankInfoType.EXPAND_RESOURCE)
+        titles.add(Const.GankInfoType.ALL)
         return titles
     }
 
